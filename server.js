@@ -34,39 +34,46 @@ const server = http.createServer((req, res) => {
             }
         });
     } else if (req.method === 'POST' && req.url === '/upload') {
-        // Handle file upload
-        const form = formidable({
-            uploadDir: uploadDir,
-            keepExtensions: true,
-            maxFileSize: 1 * 1024 * 1024, // 1 MB
-        });
+    const form = formidable({
+        uploadDir: uploadDir,
+        keepExtensions: true,
+        maxFileSize: 1 * 1024 * 1024, // 1 MB
+    });
 
-        form.parse(req, (err, fields, files) => {
-            if (err) {
-                res.writeHead(400, { 'Content-Type': 'text/html' });
-                res.end(`<h1>Upload Error: ${err.message}</h1>`);
-                return;
+    form.parse(req, (err, fields, files) => {
+        if (err) {
+            console.error("Formidable error:", err);
+            res.writeHead(400, { 'Content-Type': 'text/html' });
+            res.end(`<h1>Upload Error: ${err.message}</h1>`);
+            return;
+        }
+
+        const file = files.file?.[0];
+        if (!file) {
+            res.writeHead(400, { 'Content-Type': 'text/html' });
+            res.end('<h1>No file uploaded.</h1>');
+            return;
+        }
+
+        // ✅ Validate HTML only
+        if (!file.mimetype || file.mimetype !== 'text/html') {
+            try {
+                if (fs.existsSync(file.filepath)) {
+                    fs.unlinkSync(file.filepath);
+                }
+            } catch (e) {
+                console.error("Cleanup failed:", e);
             }
 
-            const file = files.file?.[0];
-            if (!file) {
-                res.writeHead(400, { 'Content-Type': 'text/html' });
-                res.end('<h1>No file uploaded.</h1>');
-                return;
-            }
+            res.writeHead(400, { 'Content-Type': 'text/html' });
+            res.end('<h1>Invalid file type. Only HTML files are allowed.</h1>');
+            return;
+        }
 
-            // ✅ Only allow HTML
-            if (file.mimetype !== 'text/html') {
-                fs.unlinkSync(file.filepath);
-                res.writeHead(400, { 'Content-Type': 'text/html' });
-                res.end('<h1>Invalid file type. Only HTML files allowed.</h1>');
-                return;
-            }
-
-            res.writeHead(200, { 'Content-Type': 'text/html' });
-            res.end(`<h1>File uploaded successfully: ${file.originalFilename}</h1>`);
-        });
-    } else {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(`<h1>File uploaded successfully: ${file.originalFilename}</h1>`);
+    });
+} else {
         res.writeHead(405, { 'Content-Type': 'text/html' });
         res.end('<h1>405 - Method Not Allowed</h1>');
     }
