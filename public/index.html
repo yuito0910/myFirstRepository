@@ -28,7 +28,7 @@
 
     h1 {
       margin-bottom: 1rem;
-      font-size: 3rem;
+      font-size: 1.6rem;
       color: #4a4a4a;
     }
 
@@ -70,8 +70,13 @@
 </head>
 <body>
   <div class="upload-container">
-    <h1>MAXIE BILAW</h1>
+    <h1>Upload Your HTML File</h1>
+    <p>Please choose an <strong>.html</strong> file to upload.</p>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" accept=".html" required>
+      <button type="submit">Upload</button>
     </form>
+    <p class="note">Only HTML files up to 1 MB are allowed.</p>
   </div>
 </body>
 </html>
