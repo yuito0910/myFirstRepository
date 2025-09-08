@@ -4,7 +4,7 @@ const path = require('path');
 const mime = require('mime-types');
 const formidable = require('formidable');
 
-// Folder for uploads
+// ✅ Store uploads in a separate folder
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir);
@@ -12,7 +12,7 @@ if (!fs.existsSync(uploadDir)) {
 
 const server = http.createServer((req, res) => {
     if (req.method === 'GET') {
-        // Serve files from /public
+        // Serve static files from /public
         let filePath = path.join(
             __dirname,
             'public',
@@ -38,7 +38,7 @@ const server = http.createServer((req, res) => {
         const form = formidable({
             uploadDir: uploadDir,
             keepExtensions: true,
-            maxFileSize: 1 * 1024 * 1024, // 1 MB limit
+            maxFileSize: 1 * 1024 * 1024, // 1 MB
         });
 
         form.parse(req, (err, fields, files) => {
@@ -48,19 +48,18 @@ const server = http.createServer((req, res) => {
                 return;
             }
 
-            const file = files.file?.[0]; // get uploaded file
+            const file = files.file?.[0];
             if (!file) {
                 res.writeHead(400, { 'Content-Type': 'text/html' });
                 res.end('<h1>No file uploaded.</h1>');
                 return;
             }
 
-            // ✅ Only allow HTML files
-            const allowedType = 'text/html';
-            if (file.mimetype !== allowedType) {
-                fs.unlinkSync(file.filepath); // delete invalid file
+            // ✅ Only allow HTML
+            if (file.mimetype !== 'text/html') {
+                fs.unlinkSync(file.filepath);
                 res.writeHead(400, { 'Content-Type': 'text/html' });
-                res.end('<h1>Invalid file type. Only HTML files are allowed.</h1>');
+                res.end('<h1>Invalid file type. Only HTML files allowed.</h1>');
                 return;
             }
 
