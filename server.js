@@ -2,7 +2,8 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const mime = require('mime-types');
-const formidable = require('formidable');
+const { formidable } = require('formidable');
+
 
 // ✅ Store uploads in a separate folder
 const uploadDir = path.join(__dirname, 'uploads');
@@ -48,7 +49,12 @@ const server = http.createServer((req, res) => {
             return;
         }
 
-        const file = files.file?.[0];
+        console.log("Fields:", fields);
+        console.log("Files:", files);
+
+        const uploaded = files.file;
+        const file = Array.isArray(uploaded) ? uploaded[0] : uploaded;
+
         if (!file) {
             res.writeHead(400, { 'Content-Type': 'text/html' });
             res.end('<h1>No file uploaded.</h1>');
@@ -73,7 +79,8 @@ const server = http.createServer((req, res) => {
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.end(`<h1>File uploaded successfully: ${file.originalFilename}</h1>`);
     });
-} else {
+}
+ else {
         res.writeHead(405, { 'Content-Type': 'text/html' });
         res.end('<h1>405 - Method Not Allowed</h1>');
     }
