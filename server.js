@@ -5,7 +5,6 @@ const mime = require('mime-types');
 const { formidable } = require('formidable');
 
 
-// ✅ Store uploads in a separate folder
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir);
@@ -13,7 +12,6 @@ if (!fs.existsSync(uploadDir)) {
 
 const server = http.createServer((req, res) => {
     if (req.method === 'GET') {
-        // Serve static files from /public
         let filePath = path.join(
             __dirname,
             'public',
@@ -38,7 +36,7 @@ const server = http.createServer((req, res) => {
     const form = formidable({
         uploadDir: uploadDir,
         keepExtensions: true,
-        maxFileSize: 1 * 1024 * 1024, // 1 MB
+        maxFileSize: 1 * 1024 * 1024,
     });
 
     form.parse(req, (err, fields, files) => {
@@ -61,7 +59,6 @@ const server = http.createServer((req, res) => {
             return;
         }
 
-        // ✅ Validate HTML only
         if (!file.mimetype || file.mimetype !== 'text/html') {
             try {
                 if (fs.existsSync(file.filepath)) {

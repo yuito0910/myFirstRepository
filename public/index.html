@@ -3,15 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Node.js File Server</title>
+  <title>Upload HTML File</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #333;
+    }
+
+    .upload-container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+      font-size: 3rem;
+      color: #4a4a4a;
+    }
+
+    p {
+      font-size: 0.95rem;
+      color: #666;
+      margin-bottom: 1.5rem;
+    }
+
+    input[type="file"] {
+      display: block;
+      margin: 0 auto 1.5rem auto;
+      font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
+    }
+
+    button {
+      background: #667eea;
+      color: #fff;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #5a67d8;
+    }
+
+    .note {
+      font-size: 0.8rem;
+      margin-top: 1rem;
+      color: #999;
+    }
+  </style>
 </head>
 <body>
-  <h1>Welcome to the Node.js File Server</h1>
-
-  <h2>Upload an HTML File</h2>
-  <form action="/upload" method="POST" enctype="multipart/form-data">
-    <input type="file" name="file" accept=".html,text/html" required>
-    <button type="submit">Upload</button>
-  </form>
+  <div class="upload-container">
+    <h1>MAXIE BILAW</h1>
+    </form>
+  </div>
 </body>
 </html>
