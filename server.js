@@ -25,8 +25,8 @@ const server = http.createServer((req, res) => {
                     res.writeHead(404, { 'Content-Type': 'text/html' });
                     res.end('<h1>404 - File Not Found</h1>', 'utf8');
                 } else {
-                    res.writeHead(500);
-                    res.end(`Server Error: ${err.code}`);
+                    res.writeHead(500, { 'Content-Type': 'text/html' });
+                    res.end(`<h1>Server Error: ${err.code}</h1>`);
                 }
             } else {
                 res.writeHead(200, { 'Content-Type': mime.lookup(filePath) || 'text/plain' });
@@ -38,7 +38,7 @@ const server = http.createServer((req, res) => {
         const form = formidable({
             uploadDir: uploadDir,
             keepExtensions: true,
-            maxFileSize: 5 * 1024 * 1024, // 5MB limit
+            maxFileSize: 1 * 1024 * 1024, // 1 MB limit
         });
 
         form.parse(req, (err, fields, files) => {
@@ -48,13 +48,19 @@ const server = http.createServer((req, res) => {
                 return;
             }
 
-            const file = files.file[0]; // input name="file"
-            const allowedTypes = ['image/jpeg', 'image/png', 'text/plain'];
+            const file = files.file?.[0]; // get uploaded file
+            if (!file) {
+                res.writeHead(400, { 'Content-Type': 'text/html' });
+                res.end('<h1>No file uploaded.</h1>');
+                return;
+            }
 
-            if (!allowedTypes.includes(file.mimetype)) {
+            // ✅ Only allow HTML files
+            const allowedType = 'text/html';
+            if (file.mimetype !== allowedType) {
                 fs.unlinkSync(file.filepath); // delete invalid file
                 res.writeHead(400, { 'Content-Type': 'text/html' });
-                res.end('<h1>Invalid file type. Only JPG, PNG, and TXT allowed.</h1>');
+                res.end('<h1>Invalid file type. Only HTML files are allowed.</h1>');
                 return;
             }
 
