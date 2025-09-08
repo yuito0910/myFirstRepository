@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../../VS Py"
+		},
+		{
+			"path": "../../YOLOv5"
+		},
+		{
+			"path": ".."
+		}
+	],
+	"settings": {}
+}
